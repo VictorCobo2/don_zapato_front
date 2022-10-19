@@ -19,7 +19,7 @@
       <v-col cols="12" lg="5"> </v-col>
       <v-col>
         <router-link to="/add" tag="button">
-          <v-btn color="success" class="ma-2">
+          <v-btn color="success" class="ma-2" @click="addShoe()">
             Agregar Producto
             <v-icon right> mdi-plus-circle-outline </v-icon>
           </v-btn>
@@ -53,6 +53,7 @@
 
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "Dashboard",
   data() {
@@ -147,6 +148,21 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+      _addShoe: "_addShoe",
+    }),
+    async addShoe() {
+      const data = {
+        referencia: "referencia",
+        marca: "marca",
+        stock: 10,
+        p_compra: 35.0,
+        p_venta: 80.0,
+        image:"https://static.nike.com/a/images/t_default/27a70d37-7355-4368-9eb4-42d893acdcc2/calzado-air-force-1-shadow-kTgn9J.png",
+      };
+      const respuesta = await this._addShoe({data});
+      console.log(respuesta)
+    },
     onButtonClick(item) {
       console.log("click on " + item.no);
     },
