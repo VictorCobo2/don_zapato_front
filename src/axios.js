@@ -1,6 +1,7 @@
 import { default as axios } from "axios";
 
-const URI = "http://localhost:9000/api/";
+//const URI = "https://donzapato-backend.herokuapp.com/api";
+const URI = "http://localhost:9000/api";
 
 const axiosSc = ({ url, data = {}, method = "POST", header = {}, responseType = "json" }) => {
   return new Promise((resolve, reject) => {
@@ -17,11 +18,9 @@ const axiosSc = ({ url, data = {}, method = "POST", header = {}, responseType = 
         return status >= 200 && status < 400;
       },
     };
-    console.log("hola bebe", config)
-
+    console.log(`${URI}${url}`)
     axios(config)
       .then((res) => {
-        console.log(res.data, "jajajja")
         resolve(res.data);
       })
       .catch((error) => {
@@ -39,7 +38,6 @@ const axiosSc = ({ url, data = {}, method = "POST", header = {}, responseType = 
           response.message = error.message;
           response.status == -1;
         }
-        error_console("global", error);
         reject(response);
       });
   });

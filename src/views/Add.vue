@@ -9,6 +9,10 @@
         <v-icon dark left> mdi-arrow-left </v-icon>Volver
       </v-btn>
     </router-link>
+    <v-btn class="ma-2" color="success" @click="dialog = true">
+      Carga masiva
+    </v-btn>
+
     <form>
       <v-text-field
         v-model="referencia"
@@ -55,23 +59,71 @@
         @input="$v.p_venta.$touch()"
         @blur="$v.p_venta.$touch()"
       ></v-text-field>
-      <v-file-input
-        :rules="rules"
-        accept="image/png, image/jpeg, image/bmp"
-        placeholder="Click aqui para subir la imagen"
-        prepend-icon="mdi-camera"
-        label="Imagen del producto"
-      ></v-file-input>
+      <v-text-field
+        v-model="imagen"
+        :error-messages="imagenErrors"
+        :counter="15"
+        label="Url de imagen"
+        required
+        @input="$v.imagen.$touch()"
+        @blur="$v.imagen.$touch()"
+      ></v-text-field>
 
       <v-btn class="mr-4" @click="submit" color="success"> guardar </v-btn>
       <v-btn @click="clear"> limpiar </v-btn>
     </form>
+    <v-snackbar
+      v-model="snackbar.estado"
+      :color="snackbar.color"
+      :timeout="1500"
+      bottom
+      left
+    >
+      {{ snackbar.text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn icon dark text @click="snackbar.estado = false" v-bind="attrs">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
+    <template>
+      <v-row justify="center">
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">User Profile</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-file-input truncate-length="15"></v-file-input>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog = false">
+                Close
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="dialog = false">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+    </template>
+  </div>
+</template>
   </div>
 </template>
 
 <script>
 import { validationMixin } from "vuelidate";
 import { required, maxLength } from "vuelidate/lib/validators";
+import { mapActions } from "vuex";
 
 export default {
   mixins: [validationMixin],
@@ -82,18 +134,24 @@ export default {
     stock: { required, maxLength: maxLength(10) },
     p_compra: { required, maxLength: maxLength(10) },
     p_venta: { required, maxLength: maxLength(10) },
+    imagen: { required },
   },
 
   data: () => ({
     referencia: "",
     marca: "",
+    dialog: false,
     stock: "",
     p_compra: "",
     p_venta: "",
+    imagen: "",
     rules: [
       (value) =>
         !value || value.size < 2000000 || "No puede pesar mas de 2 MB!",
     ],
+    snackbar: {
+      estado: false,
+    },
   }),
 
   computed: {
@@ -143,15 +201,51 @@ export default {
         errors.push("El precio de venta es requiredo");
       return errors;
     },
+    imagenErrors() {
+      const errors = [];
+      if (!this.$v.imagen.$dirty) return errors;
+      !this.$v.imagen.required && errors.push("La imagen es requerida");
+      return errors;
+    },
   },
 
   methods: {
-    submit() {
-      this.$v.$touch();
+    ...mapActions({
+      _addShoe: "_addShoe",
+    }),
+    async submit() {
+      const data = {
+        referencia: this.referencia,
+        marca: this.marca,
+        stock: this.stock,
+        p_compra: this.p_compra,
+        p_venta: this.p_venta,
+        image: this.imagen,
+      };
+
+      const respuesta = await this._addShoe(data);
+
+      if (respuesta.data.N1) {
+        this.msj("Producto agregado correctamente", "green");
+        this.clear();
+      } else {
+        this.msj("Error al agregar producto, revise los datos.");
+      }
+    },
+    msj(text, color) {
+      this.snackbar.estado = true;
+      this.snackbar.text = text;
+      this.snackbar.color = color ? `${color} darken-2` : "red darken-3";
     },
     clear() {
       this.$v.$reset();
       this.referencia = "";
+      this.referencia = "";
+      this.marca = "";
+      this.stock = "";
+      this.p_compra = "";
+      this.p_venta = "";
+      this.imagen = "";
     },
   },
 };

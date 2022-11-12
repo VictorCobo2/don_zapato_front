@@ -1,36 +1,41 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import http from "../axios";
+import axios from 'axios';
 
 Vue.use(Vuex);
+
+// const URI = "https://donzapato-backend.herokuapp.com/api";
+const URI = "http://localhost:9000/api";
 
 export default new Vuex.Store({
   state: {},
   getters: {},
   mutations: {},
   actions: {
-    async _addShoe({ commit }, {data}) {
-      const DATA = {
-        referencia: "referencia",
-        marca: "marca",
-        stock: 10,
-        p_compra: 35.0,
-        p_venta: 80.0,
-        image:"https://static.nike.com/a/images/t_default/27a70d37-7355-4368-9eb4-42d893acdcc2/calzado-air-force-1-shadow-kTgn9J.png",
-      };
+    async _addShoe({ commit }, data) {
       try {
-        console.log(data, "hola bebe")
-        const respuesta = await http({
-          //header: {},
-          method: "POST",
-          url: "shoes/add",
-          data
-        });
-        console.log(respuesta, "peraa hp");
+        const prueba = await axios.post(`${URI}/shoes/add`, data).then()
+        return prueba
       } catch (error) {
-        console.log(error, "erroooooooooooooooooooooooooooooooooo");
+        console.log(error);
       }
     },
+    async _getAllShoes({ commit }) {
+      try {
+        const prueba = await axios.get(`${URI}/shoes/all`).then().catch((error)=>{
+          console.log(error)
+          return error
+        })
+        console.log(prueba)
+        return prueba
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async _postManyCsv({commit}){
+
+    }
   },
   modules: {},
 });
