@@ -222,6 +222,8 @@ import { mapActions } from "vuex";
 import money from 'v-money'
 import {mask} from 'vue-the-mask'
 import Vue from 'vue'
+import csvtojson from "csvtojson";
+
 Vue.use(money, {precision: 4})
 
 export default {
@@ -349,9 +351,23 @@ export default {
     async subirCsv(){
       this.valid_csv = this.$refs.form_input.validate()
       if(this.valid_csv){
-      const respuesta = await this._postManyCsv(this.file)
-      console.log(respuesta.msg)
-      if(respuesta.msg) {
+      await this.csvJSON(this.file)
+      //const respuesta = await this._postManyCsv(jsonObj)
+      //console.log(respuesta.msg)
+      
+    }
+    },
+    async csvJSON(csv){
+      console.log("holaaa")
+      let reader = new FileReader();
+      let output
+      reader.readAsBinaryString(csv);
+  
+      reader.onload = async evt => {
+        csv = reader.result;
+        const jsonObj = await csvtojson().fromString(csv)
+        const respuesta = await this._postManyCsv(jsonObj)
+        if(respuesta.msg) {
         console.log(this.mensaje)
         this.existe = respuesta 
         this.mensaje = `${respuesta.msg} ${respuesta.referncia}`
@@ -369,8 +385,8 @@ export default {
         this.mensaje = "El CSV no cumple con el formato permitido."
         this.dialogExiste = true
       }
-      
-    }
+      }
+      return jsonObj
     },
 
     async convertBase64(){

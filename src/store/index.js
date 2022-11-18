@@ -6,8 +6,8 @@ import FormData from "form-data";
 
 Vue.use(Vuex);
 
-// const URI = "https://donzapato-backend.herokuapp.com/api";
-const URI = "http://localhost:9000/api";
+const URI = "https://donzapatoapi.azurewebsites.net/api";
+//const URI = "http://localhost:9000/api";
 
 export default new Vuex.Store({
   state: {},
@@ -46,12 +46,13 @@ export default new Vuex.Store({
       }
     },
     async _postManyCsv({ commit }, data) {
-      let file = new FormData();
-      file.append("file", data);
-
+      // let file = new FormData();
+      // file.append("file", data);
+      console.log("Estoooooooooooooooo")
+      console.log(data)
       try {
         const prueba = await axios
-          .post(`${URI}/shoes/csv`, file)
+          .post(`${URI}/shoes/csv`, data)
           .then()
           .catch((ERR) => {
             if (ERR.request.status == 405) return JSON.parse(ERR.request.response);

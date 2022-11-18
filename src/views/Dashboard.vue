@@ -278,7 +278,8 @@ export default {
     },
 
     showItem(item) {
-      if (item.image) this.image.src = item.image;
+      if (item.image && item.image != "null") this.image.src = item.image;
+      else if( item.image === "null") this.image.src = "https://upload.wikimedia.org/wikipedia/commons/6/66/Sin_datos.jpg";
       else this.image.src = "https://upload.wikimedia.org/wikipedia/commons/6/66/Sin_datos.jpg";
       this.tarjeta.referencia = item.referencia;
       this.tarjeta.precio = item.p_venta;
