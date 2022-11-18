@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app elevate-on-scroll elevation="3" color="white">
+  <v-app-bar app elevate-on-scroll elevation="3" color="white" v-if="$route.name != 'login'">
     <v-app-bar-nav-icon @click="$emit('drawerEvent')"></v-app-bar-nav-icon>
     <v-spacer />
     <v-col lg="6" cols="12">
@@ -8,27 +8,13 @@
     <v-spacer />
     <v-menu offset-y>
       <template v-slot:activator="{ attrs, on }">
-        <span
-          class="mx-5 mr-10"
-          style="cursor: pointer"
-          v-bind="attrs"
-          v-on="on"
-        >
-        </span>
+        <span class="mx-5 mr-10" style="cursor: pointer" v-bind="attrs" v-on="on"> </span>
       </template>
       <v-list three-line width="250">
         <template v-for="(item, index) in items">
-          <v-subheader
-            v-if="item.header"
-            :key="item.header"
-            v-text="item.header"
-          ></v-subheader>
+          <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
 
-          <v-divider
-            v-else-if="item.divider"
-            :key="index"
-            :inset="item.inset"
-          ></v-divider>
+          <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
 
           <v-list-item v-else :key="item.title">
             <v-list-item-avatar>
@@ -37,9 +23,7 @@
 
             <v-list-item-content>
               <v-list-item-title v-html="item.title"></v-list-item-title>
-              <v-list-item-subtitle
-                v-html="item.subtitle"
-              ></v-list-item-subtitle>
+              <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -51,9 +35,7 @@
           <v-chip link>
             <v-badge dot bottom color="green" offset-y="10" offset-x="10">
               <v-avatar size="40">
-                <v-img
-                  src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                />
+                <v-img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
               </v-avatar>
             </v-badge>
             <span class="ml-3">Administrador</span>
@@ -71,12 +53,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider />
-        <v-list-item
-          link
-          v-for="(menu, i) in menus"
-          :key="i"
-          @click="desicion(menu.title)"
-        >
+        <v-list-item link v-for="(menu, i) in menus" :key="i" @click="desicion(menu.title)" :to="menu.route">
           <v-list-item-icon>
             <v-icon>{{ menu.icon }}</v-icon>
           </v-list-item-icon>
@@ -119,21 +96,12 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="cerrar()"> Cerrar </v-btn>
-            <v-btn color="blue darken-1" text @click="confirmar()">
-              Guardar
-            </v-btn>
+            <v-btn color="blue darken-1" text @click="confirmar()"> Guardar </v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
     </v-dialog>
-    <v-snackbar
-      v-model="snackbar.estado"
-      :color="snackbar.color"
-      prominent
-      :timeout="1500"
-      bottom
-      left
-    >
+    <v-snackbar v-model="snackbar.estado" :color="snackbar.color" prominent :timeout="1500" bottom left>
       {{ snackbar.text }}
       <template v-slot:action="{ attrs }">
         <v-btn icon dark text @click="snackbar.estado = false" v-bind="attrs">
@@ -151,9 +119,9 @@ export default {
   data() {
     return {
       menus: [
-        { title: "Perfil", icon: "mdi-account" },
+        { title: "Perfil", icon: "mdi-account", route: "/user" },
         { title: "Cambiar contraseña", icon: "mdi-key" },
-        { title: "Salir", icon: "mdi-logout" },
+        { title: "Salir", icon: "mdi-logout", route: "/login" },
       ],
       items: [],
       dialog: false,
@@ -162,19 +130,15 @@ export default {
       newContrasena: "",
       contrasenaRules: [
         (v) => !!v || "La contraseña es requerida!",
-        (v) =>
-          (v && v.length <= 100) ||
-          "La contraseña no puede contener mas de 100 caracteres",
+        (v) => (v && v.length <= 100) || "La contraseña no puede contener mas de 100 caracteres",
       ],
       newContrasenaRules: [
         (v) => !!v || "La contraseña es requerida!",
-        (v) =>
-          (v && v.length <= 100) ||
-          "La contraseña no puede contener mas de 100 caracteres",
+        (v) => (v && v.length <= 100) || "La contraseña no puede contener mas de 100 caracteres",
       ],
       snackbar: {
-      estado: false,
-    },
+        estado: false,
+      },
     };
   },
   methods: {
@@ -182,6 +146,14 @@ export default {
       _changePass: "_changePass",
     }),
     desicion(title) {
+      console.log(title);
+      if (title == "Salir") {
+        localStorage.removeItem("user");
+        setTimeout(() => {
+          this.$router.push("/login");
+        }, 100);
+      }
+
       if (title === "Cambiar contraseña") this.changePassword();
     },
     async changePassword() {
@@ -196,14 +168,14 @@ export default {
           id: "6375ac3034ae2c8408282cd2",
         };
         const respuesta = await this._changePass(data);
-        console.log(respuesta.status)
-        if(respuesta.status === 405){ 
-          this.msj("La contraseña ingresada es incorrecta")
-          this.cerrar()
+
+        if (respuesta.status === 405) {
+          this.msj("La contraseña ingresada es incorrecta");
+          this.cerrar();
         }
-        if(respuesta.status === 200) {
-          this.msj("Contraseña cambiada correctamente", "green")
-          this.cerrar()
+        if (respuesta.status === 200) {
+          this.msj("Contraseña cambiada correctamente", "green");
+          this.cerrar();
         }
       }
     },

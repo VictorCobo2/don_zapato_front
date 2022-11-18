@@ -7,31 +7,18 @@
     <v-row>
       <v-col lg="7" cols="12">
         <v-row>
-          <v-col
-            lg="6"
-            cols="12"
-            v-for="(item, index) in activityLog"
-            :key="index"
-          >
-          </v-col>
+          <v-col lg="6" cols="12" v-for="(item, index) in activityLog" :key="index"> </v-col>
         </v-row>
       </v-col>
       <v-col cols="12" lg="5"> </v-col>
       <v-col>
         <v-card>
-          <v-data-table
-            :headers="headers"
-            :items="desserts"
-            sort-by="calories"
-            class="elevation-1"
-          >
+          <v-data-table :headers="headers" :items="desserts" sort-by="calories" class="elevation-1">
             <template v-slot:top>
               <v-toolbar flat>
                 <v-toolbar-title>Lista de zapatos</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
-
                 <v-spacer></v-spacer>
-
                 <v-dialog v-model="dialog" max-width="500px">
                   <template v-slot:activator="{}">
                     <router-link to="/add" tag="button">
@@ -51,37 +38,19 @@
                         <v-form ref="form" v-model="valid" lazy-validation>
                           <v-row>
                             <v-col cols="12" sm="6" md="4">
-                              <v-text-field
-                                disabled
-                                v-model="editedItem.referencia"
-                                label="Referencia"
-                              ></v-text-field>
+                              <v-text-field disabled v-model="editedItem.referencia" label="Referencia"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-text-field
-                                v-model="editedItem.marca"
-                                label="Marca"
-                                :rules="marcaRules"
-                              ></v-text-field>
+                              <v-text-field v-model="editedItem.marca" label="Marca" :rules="marcaRules"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-text-field
-                                v-model="editedItem.stock"
-                                type="number"
-                                label="Stock"
-                                :maxlength="10"
-                                :rules="stockRules"
-                              ></v-text-field>
+                              <v-text-field v-model="editedItem.stock" type="number" label="Stock" :maxlength="10" :rules="stockRules"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
                               <v-text-field
                                 v-model="editedItem.p_compra"
                                 :rules="p_copraRules"
-                                v-mask="[
-                                  '$ #.###',
-                                  '$ ##.###',
-                                  '$ ###.###.###',
-                                ]"
+                                v-mask="['$ #.###', '$ ##.###', '$ ###.###.###']"
                                 label="Precio de compra"
                               ></v-text-field>
                             </v-col>
@@ -89,11 +58,7 @@
                               <v-text-field
                                 v-model="editedItem.p_venta"
                                 :rules="p_ventaRules"
-                                v-mask="[
-                                  '$ #.###',
-                                  '$ ##.###',
-                                  '$ ###.###.###',
-                                ]"
+                                v-mask="['$ #.###', '$ ##.###', '$ ###.###.###']"
                                 label="Precio de venta"
                               ></v-text-field>
                             </v-col>
@@ -115,25 +80,17 @@
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn color="red" text @click="close"> Cancelar </v-btn>
-                      <v-btn color="success" text @click="save">
-                        Guardar
-                      </v-btn>
+                      <v-btn color="success" text @click="save"> Guardar </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialogDelete" max-width="500px">
                   <v-card>
-                    <v-card-title class="text-h5"
-                      >Deseas eliminar este producto?</v-card-title
-                    >
+                    <v-card-title class="text-h5">Deseas eliminar este producto?</v-card-title>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="closeDelete"
-                        >Cancelar</v-btn
-                      >
-                      <v-btn color="red" text @click="deleteItemConfirm"
-                        >Eliminar</v-btn
-                      >
+                      <v-btn color="blue darken-1" text @click="closeDelete">Cancelar</v-btn>
+                      <v-btn color="red" text @click="deleteItemConfirm">Eliminar</v-btn>
                       <v-spacer></v-spacer>
                     </v-card-actions>
                   </v-card>
@@ -141,29 +98,19 @@
               </v-toolbar>
               <v-dialog v-if="dialogMasivo" max-width="500px">
                 <v-card>
-                  <v-card-title class="text-h5"
-                    >Deseas este producto?</v-card-title
-                  >
+                  <v-card-title class="text-h5">Deseas este producto?</v-card-title>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="closeMasivo"
-                      >Cancelar</v-btn
-                    >
-                    <v-btn color="red" text @click="closeMasivo"
-                      >Eliminar</v-btn
-                    >
+                    <v-btn color="blue darken-1" text @click="closeMasivo">Cancelar</v-btn>
+                    <v-btn color="red" text @click="closeMasivo">Eliminar</v-btn>
                     <v-spacer></v-spacer>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
             </template>
             <template v-slot:[`item.actions`]="{ item }">
-              <v-icon small class="mr-2" @click="showItem(item)">
-                mdi-eye
-              </v-icon>
-              <v-icon small class="mr-2" @click="editItem(item)">
-                mdi-pencil
-              </v-icon>
+              <v-icon small class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
+              <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
               <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
             </template>
             <template v-slot:no-data>
@@ -192,17 +139,13 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialogShow = false">
-              Cerrar
-            </v-btn>
+            <v-btn color="blue darken-1" text @click="dialogShow = false"> Cerrar </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-row>
   </div>
 </template>
-
-
 
 <script>
 import { mapActions } from "vuex";
@@ -226,6 +169,7 @@ export default {
       dialogShow: false,
       dialogMasivo: false,
       base64: "",
+      valid: "",
       activityLog: [],
       image: {
         src: "",
@@ -266,24 +210,15 @@ export default {
         imagen: "",
       },
       desserts: [],
-      marcaRules: [
-        (v) => !!v || "La marca es requerida!",
-        (v) =>
-          (v && v.length <= 15) ||
-          "La marca no puede contener mas de 15 caracteres",
-      ],
+      marcaRules: [(v) => !!v || "La marca es requerida!", (v) => (v && v.length <= 15) || "La marca no puede contener mas de 15 caracteres"],
       stockRules: [(v) => !!v || "El stock es requerido!"],
       p_copraRules: [
         (v) => !!v || "El precio de compra es requerido!",
-        (v) =>
-          (v && v.length <= 50) ||
-          "El precio de compra no puede contener mas de 50 caracteres",
+        (v) => (v && v.length <= 50) || "El precio de compra no puede contener mas de 50 caracteres",
       ],
       p_ventaRules: [
         (v) => !!v || "El precio de venta es requerido!",
-        (v) =>
-          (v && v.length <= 50) ||
-          "El precio de compra no puede contener mas de 50 caracteres",
+        (v) => (v && v.length <= 50) || "El precio de compra no puede contener mas de 50 caracteres",
       ],
       file_imgRules: [(v) => !!v || "La imagen del producto es requerido!"],
       input_csvRules: [(v) => !!v || "El csv es requerido"],
@@ -302,7 +237,9 @@ export default {
       val || this.closeDelete();
     },
   },
-
+  created() {
+    if (!localStorage.user) this.$router.push("/login");
+  },
   methods: {
     ...mapActions({
       _getAllShoes: "_getAllShoes",
@@ -342,9 +279,7 @@ export default {
 
     showItem(item) {
       if (item.image) this.image.src = item.image;
-      else
-        this.image.src =
-          "https://upload.wikimedia.org/wikipedia/commons/6/66/Sin_datos.jpg";
+      else this.image.src = "https://upload.wikimedia.org/wikipedia/commons/6/66/Sin_datos.jpg";
       this.tarjeta.referencia = item.referencia;
       this.tarjeta.precio = item.p_venta;
       this.tarjeta.marca = item.marca;
