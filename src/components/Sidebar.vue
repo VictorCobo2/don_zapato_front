@@ -5,7 +5,7 @@
         <v-avatar class="mb-4" color="grey darken-1" size="64">
           <v-img aspect-ratio="30" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
         </v-avatar>
-        <h2 class="white--text">Don Zapato</h2>
+        <h2 class="white--text">{{ tienda }}</h2>
       </div>
     </v-img>
     <v-divider></v-divider>
@@ -26,6 +26,7 @@
 export default {
   name: "Sidebar",
   props: ["drawer"],
+  tienda :"",
   data() {
     return {
       links: [
@@ -33,6 +34,10 @@ export default {
         { icon: "mdi-account", text: "Perfil", route: "/user" },
       ],
     };
+  },
+  created(){
+    const user = JSON.parse(localStorage.user);
+    this.tienda = user.storeName
   },
   methods: {
     prubea(url) {

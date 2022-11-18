@@ -62,7 +62,7 @@ export default {
     snackbar: {
       estado: false,
     },
-
+    user_id :"",
     nombre: "",
     nombreRules: [(v) => !!v || "El nombre es requerida!", (v) => (v && v.length <= 15) || "El nombre no puede contener mas de 15 caracteres"],
     email: "",
@@ -80,6 +80,7 @@ export default {
     this.nombre = user.nombre;
     this.email = user.email;
     this.tienda = user.storeName;
+    this.user_id = user._id
   },
   methods: {
     ...mapActions({
@@ -89,14 +90,16 @@ export default {
       this.valid = this.$refs.form.validate();
       if (this.valid) {
         const data = {
-          _id: "63754f103595e03a52621dc9",
+          _id: this.user_id,
           nombre: this.nombre,
           email: this.email,
           storeName: this.tienda,
         };
         const respuesta = await this._editUser(data);
         if (respuesta.data.modifiedCount == 1) {
+          localStorage.user = JSON.stringify(data);
           this.msj("Usuario editado correctamente", "green");
+          location.reload()
         }
         if (respuesta.data.modifiedCount == 0) {
           this.msj("Los datos son iguales", "red");

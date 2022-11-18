@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon @click="$emit('drawerEvent')"></v-app-bar-nav-icon>
     <v-spacer />
     <v-col lg="6" cols="12">
-      <h2 class="black--text">Don Zapato</h2>
+      <h2 class="black--text">{{tienda }}</h2>
     </v-col>
     <v-spacer />
     <v-menu offset-y>
@@ -38,7 +38,7 @@
                 <v-img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
               </v-avatar>
             </v-badge>
-            <span class="ml-3">Administrador</span>
+            <span class="ml-3">{{nombre}}</span>
           </v-chip>
         </span>
       </template>
@@ -49,7 +49,7 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>Administrador</v-list-item-title>
+            <v-list-item-title>{{nombre}}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-divider />
@@ -118,6 +118,8 @@ export default {
   name: "Topbar",
   data() {
     return {
+      tienda:"",
+      nombre:"",
       menus: [
         { title: "Perfil", icon: "mdi-account", route: "/user" },
         { title: "Cambiar contraseña", icon: "mdi-key" },
@@ -140,6 +142,11 @@ export default {
         estado: false,
       },
     };
+  },
+  created(){
+    const user = JSON.parse(localStorage.user);
+    this.tienda = user.storeName
+    this.nombre = user.nombre
   },
   methods: {
     ...mapActions({

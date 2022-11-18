@@ -1,7 +1,6 @@
 <template>
-  <div id="app">
     <v-app id="inspire">
-      <v-container class="grey lighten-3" fluid fill-height>
+      <v-container class="" fluid fill-height>
         <v-card class="mt-4 mx-auto text-center hidden-sm-only" min-width="320">
           <v-card-text>
             <v-card class="v-card--offset mx-auto" color="primary" elevation="4" dark>
@@ -15,7 +14,6 @@
             <v-card-text>
               <v-text-field v-model="email" type="email" :rules="emailRules" label="Email" required></v-text-field>
               <v-text-field v-model="contrasena" type="password" :rules="contrasenaRules" label="Contraseña" required></v-text-field>
-              <div class="caption grey--text text--darken-1 text-left">*Campos requeridos</div>
             </v-card-text>
             <v-card-actions>
               <v-row align="center" no-gutters>
@@ -30,7 +28,7 @@
         </v-card>
       </v-container>
     </v-app>
-  </div>
+  
 </template>
 
 <script>
