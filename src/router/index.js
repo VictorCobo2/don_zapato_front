@@ -15,15 +15,19 @@ const routes = [
     component: () => import('./../views/Add')
   },
   {
-    path: '/products',
-    name: 'products',
-    component: () => import('./../views/Products')
+    path: '/user',
+    name: 'user',
+    component: () => import('./../views/User')
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('./../components/Login')
   },
 ]
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
   routes
 })
 

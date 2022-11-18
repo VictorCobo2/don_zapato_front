@@ -1,19 +1,16 @@
 <template>
+  <v-card class="mt-4 mx-auto text-center hidden-sm-only" min-width="320" width="500">
   <div>
     <v-subheader class="py-0 d-flex justify-space-between rounded-lg">
-      <h3>Agregar Producto</h3>
+      <router-link to="/" tag="button">
+      <v-btn class="mr-2" color="success" >
+        <v-icon dark> mdi-arrow-left </v-icon>
+      </v-btn>
+    </router-link>
     </v-subheader>
     <br />
-    <router-link to="/" tag="button">
-      <v-btn class="ma-2" color="success" dark>
-        <v-icon dark left> mdi-arrow-left </v-icon>Volver
-      </v-btn>
-     
-    </router-link>
-    <v-btn class="ma-2" color="success" @click="dialog = true">
-        Carga masiva
-      </v-btn>
-      
+      <v-container>
+        <h3>Agregar Producto</h3>
     <v-form
     ref="form"
     v-model="valid"
@@ -77,8 +74,16 @@
   truncate-length="15"
       ></v-file-input>
     </v-form>
-    <v-btn class="mr-4" @click="submit" color="success"> guardar </v-btn>
+    <v-container>
+      <v-btn class="mr-4" @click="submit" color="success"> guardar </v-btn>
+      <v-btn class="mr-4" color="success" @click="dialog = true">
+        Carga masiva </v-btn>
       <v-btn @click="clear"> limpiar </v-btn>
+    </v-container>
+    
+  </v-container>
+
+   
     <v-snackbar
       v-model="snackbar.estado"
       :color="snackbar.color"
@@ -205,6 +210,8 @@
   </v-row>
 </template>
   </div>
+</v-card>
+
 </template>
 
 <script>

@@ -3,17 +3,7 @@
     <v-app-bar-nav-icon @click="$emit('drawerEvent')"></v-app-bar-nav-icon>
     <v-spacer />
     <v-col lg="6" cols="12">
-      <v-form>
-        <v-text-field
-          class="p-0 m-0 mt-6"
-          full-width
-          dense
-          append-icon="mdi-magnify"
-          outlined
-          rounded
-          placeholder="Search"
-        />
-      </v-form>
+      <h2 class="black--text">Don Zapato</h2>
     </v-col>
     <v-spacer />
     <v-menu offset-y>
@@ -61,7 +51,9 @@
           <v-chip link>
             <v-badge dot bottom color="green" offset-y="10" offset-x="10">
               <v-avatar size="40">
-                <v-img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
+                <v-img
+                  src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                />
               </v-avatar>
             </v-badge>
             <span class="ml-3">Administrador</span>
@@ -79,7 +71,12 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider />
-        <v-list-item link v-for="(menu, i) in menus" :key="i">
+        <v-list-item
+          link
+          v-for="(menu, i) in menus"
+          :key="i"
+          @click="desicion(menu.title)"
+        >
           <v-list-item-icon>
             <v-icon>{{ menu.icon }}</v-icon>
           </v-list-item-icon>
@@ -89,21 +86,137 @@
         </v-list-item>
       </v-list>
     </v-menu>
+    <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-card>
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <v-card-title>
+            <span class="text-h5">Cambio de contrseña</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="contrasena"
+                    :counter="100"
+                    type="password"
+                    :rules="contrasenaRules"
+                    label="Contraseña actual"
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="newContrasena"
+                    :counter="100"
+                    type="password"
+                    :rules="newContrasenaRules"
+                    label="Nueva Contraseña"
+                    required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="cerrar()"> Cerrar </v-btn>
+            <v-btn color="blue darken-1" text @click="confirmar()">
+              Guardar
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
+    <v-snackbar
+      v-model="snackbar.estado"
+      :color="snackbar.color"
+      prominent
+      :timeout="1500"
+      bottom
+      left
+    >
+      {{ snackbar.text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn icon dark text @click="snackbar.estado = false" v-bind="attrs">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app-bar>
 </template>
 
 <script>
+import { mapActions, mapMutations } from "vuex";
 export default {
   name: "Topbar",
   data() {
     return {
       menus: [
-        { title: "Profile", icon: "mdi-account" },
-        { title: "Change Password", icon: "mdi-key" },
-        { title: "Logout", icon: "mdi-logout" },
+        { title: "Perfil", icon: "mdi-account" },
+        { title: "Cambiar contraseña", icon: "mdi-key" },
+        { title: "Salir", icon: "mdi-logout" },
       ],
       items: [],
+      dialog: false,
+      valid: false,
+      contrasena: "",
+      newContrasena: "",
+      contrasenaRules: [
+        (v) => !!v || "La contraseña es requerida!",
+        (v) =>
+          (v && v.length <= 100) ||
+          "La contraseña no puede contener mas de 100 caracteres",
+      ],
+      newContrasenaRules: [
+        (v) => !!v || "La contraseña es requerida!",
+        (v) =>
+          (v && v.length <= 100) ||
+          "La contraseña no puede contener mas de 100 caracteres",
+      ],
+      snackbar: {
+      estado: false,
+    },
     };
+  },
+  methods: {
+    ...mapActions({
+      _changePass: "_changePass",
+    }),
+    desicion(title) {
+      if (title === "Cambiar contraseña") this.changePassword();
+    },
+    async changePassword() {
+      this.dialog = true;
+    },
+    async confirmar() {
+      this.valid = this.$refs.form.validate();
+      if (this.valid) {
+        const data = {
+          password: this.contrasena,
+          newPassword: this.newContrasena,
+          id: "6375ac3034ae2c8408282cd2",
+        };
+        const respuesta = await this._changePass(data);
+        console.log(respuesta.status)
+        if(respuesta.status === 405){ 
+          this.msj("La contraseña ingresada es incorrecta")
+          this.cerrar()
+        }
+        if(respuesta.status === 200) {
+          this.msj("Contraseña cambiada correctamente", "green")
+          this.cerrar()
+        }
+      }
+    },
+    msj(text, color) {
+      this.snackbar.estado = true;
+      this.snackbar.text = text;
+      this.snackbar.color = color ? `${color} darken-2` : "red darken-3";
+    },
+    cerrar() {
+      this.$refs.form.reset();
+      (this.contrasena = ""), (this.newContrasena = "");
+      this.dialog = false;
+    },
   },
 };
 </script>

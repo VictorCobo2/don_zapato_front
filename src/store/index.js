@@ -69,7 +69,31 @@ export default new Vuex.Store({
       } catch (error) {
         console.log(error);
       }
-    }
+    },
+    async _editUser({ commit }, data) {
+      try {
+        const prueba = await axios.put(`${URI}/user/edit`, data).then()
+        return prueba
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async _changePass({ commit }, data) {
+      try {
+        const prueba = await axios.put(`${URI}/user/changePassword`, data).then()
+        return prueba
+      } catch (error) {
+        return error.response
+      }
+    },
+    async _login({ commit }, data) {
+      try {
+        const prueba = await axios.put(`${URI}/user/login`, data).then()
+        return prueba
+      } catch (error) {
+        return error.response
+      }
+    },
   },
   modules: {},
 });

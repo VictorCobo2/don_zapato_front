@@ -41,7 +41,7 @@ export default {
     return {
       links: [
         ["mdi-microsoft-windows", "Dashboard", ""],
-        ["mdi-account", "Perfil", ""],
+        ["mdi-account", "Perfil", "/user"],
       ],
     };
   },
